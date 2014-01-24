@@ -3,7 +3,7 @@ document.elem = function (elemname, attributes, text) {
         text = attributes;
         attributes = null;
     }
-    return document.createElement(elemname).attribs(attributes).setText(text);
+    return document.createElement(elemname).attrib(attributes).setText(text);
 };
 document.getElem = function (selector) {
     return document.querySelector(selector);
@@ -27,19 +27,17 @@ Element.prototype.elem = function (elemname, attr, text, returnparent) {
     this.appendChild(elem);
     return (returnparent !== null && returnparent) ? this : elem;
 };
-Element.prototype.attribs = function (attributes) {
-    if (attributes !== null && typeof attributes == "object") {
-        for (var attribute in attributes) {
-            if (attributes.hasOwnProperty(attribute)) {
-                this.setAttribute(attribute, attributes[attribute]);
+Element.prototype.attrib = function (attribute, value) {
+    if (attribute) {
+        if (typeof attribute === "object") {
+            for (var key in attribute) {
+                if (attribute.hasOwnProperty(key)) {
+                    this.setAttribute(key, attribute[key]);
+                }
             }
+        } else if (typeof attribute === 'string') {
+            this.setAttribute(attribute, value);
         }
-    }
-    return this;
-};
-Element.prototype.attrib = function (name, value) {
-    if (name) {
-        this.setAttribute(name, value);
     }
     return this;
 };
@@ -71,8 +69,8 @@ NodeList.prototype.each = function (callback) {
         callback.call(this[i], i);
     }
 };
-NodeList.prototype.attrib = function (name, value) {
+NodeList.prototype.attrib = function (attribute, value) {
     this.each(function () {
-        this.attrib(name, value)
+        this.attrib(attribute, value)
     });
 };

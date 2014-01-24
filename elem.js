@@ -1,11 +1,27 @@
 document.elem = function (elemname, attributes, text) {
+    if (typeof attributes === 'string') {
+        text = attributes;
+        attributes = null;
+    }
     return document.createElement(elemname).attribs(attributes).setText(text);
+};
+document.getElem = function(selector) {
+    return document.querySelector(selector);
+};
+document.getElemAll = function(selector) {
+    return document.querySelectorAll(selector);
 };
 document.delElem = function (elemname) {
     if (element && element.parentNode) {
         element.parentNode.removeChild(element);
     }
-}
+};
+Element.prototype.getElem = function(selector) {
+    return this.querySelector(selector);
+};
+Element.prototype.getElemAll = function(selector) {
+    return this.querySelectorAll(selector);
+};
 Element.prototype.elem = function (elemname, attr, text, returnparent) {
     var elem = (typeof elemname === 'string') ? document.elem(elemname, attr, text) : elemname;
     this.appendChild(elem);

@@ -5,10 +5,10 @@ document.elem = function (elemname, attributes, text) {
     }
     return document.createElement(elemname).attribs(attributes).setText(text);
 };
-document.getElem = function(selector) {
+document.getElem = function (selector) {
     return document.querySelector(selector);
 };
-document.getElemAll = function(selector) {
+document.getElemAll = function (selector) {
     return document.querySelectorAll(selector);
 };
 document.delElem = function (elemname) {
@@ -16,10 +16,10 @@ document.delElem = function (elemname) {
         element.parentNode.removeChild(element);
     }
 };
-Element.prototype.getElem = function(selector) {
+Element.prototype.getElem = function (selector) {
     return this.querySelector(selector);
 };
-Element.prototype.getElemAll = function(selector) {
+Element.prototype.getElemAll = function (selector) {
     return this.querySelectorAll(selector);
 };
 Element.prototype.elem = function (elemname, attr, text, returnparent) {
@@ -66,4 +66,13 @@ Element.prototype.clearElem = function () {
         return this.elem(elemname, attr, text);
     };
 });
-
+NodeList.prototype.each = function (callback) {
+    for (var i = 0; i < this.length; i++) {
+        callback.call(this[i], i);
+    }
+};
+NodeList.prototype.attrib = function (name, value) {
+    this.each(function () {
+        this.attrib(name, value)
+    });
+};

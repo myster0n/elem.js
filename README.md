@@ -7,7 +7,7 @@ Functions
 -------
 
 * document.elem = function (elemname, attributes, text) 
-** with shortcuts for common HTML elements like div, span, table, ul, ... 
+  * with shortcuts for common HTML elements like div, span, table, ul, ... 
 * document.getElem = function (selector) 
 * document.getElemAll = function (selector) 
 * document.delElem = function (element) 
@@ -15,7 +15,7 @@ Functions
 * Element.prototype.getElemAll = function (selector) 
 * Element.prototype.del = function () 
 * Element.prototype.elem = function (elemname, attr, text, returnparent) 
-** with shortcuts for common HTML elements like div, span, table, ul, ... 
+  * with shortcuts for common HTML elements like div, span, table, ul, ... 
 * Element.prototype.attrib = function (attribute, value) 
 * Element.prototype.setText = function (text) 
 * Element.prototype.clearElem = function () 
@@ -24,7 +24,7 @@ Functions
 * NodeList.prototype.each = function (callback) 
 * NodeList.prototype.attrib = function (attribute, value) 
 * NodeList.prototype.elem = function (elemname, attr, text, returnparent) 
-** with shortcuts for common HTML elements like div, span, table, ul, ... 
+  * with shortcuts for common HTML elements like div, span, table, ul, ... 
 * NodeList.prototype.del = function () 
 * NodeList.prototype.getElem = function(selector)
 * NodeList.prototype.getElemAll = function(selector)

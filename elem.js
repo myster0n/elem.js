@@ -26,6 +26,11 @@ Element.prototype.getElem = function (selector) {
 Element.prototype.getElemAll = function (selector) {
     return this.querySelectorAll(selector);
 };
+Element.prototype.delete = function () {
+    var parent = this.parentNode;
+    if (parent) parent.removeChild(this); 
+    return parent;
+};
 Element.prototype.elem = function (elemname, attr, text, returnparent) {
     var elem = (typeof elemname === 'string') ? document.elem(elemname, attr, text) : elemname;
     this.appendChild(elem);

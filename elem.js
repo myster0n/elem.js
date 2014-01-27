@@ -1,3 +1,31 @@
+Object.forEach = function (object, callback) {
+    for (var key in object) {
+        if (object.hasOwnProperty(key))
+            callback.call(object, key, object[key]);
+    }
+};
+Object.clone = function (o){
+    if(o == null || typeof(o) != 'object') return o;
+
+    var objNew = o.constructor();
+
+    for(var key in o)
+        objNew[key] = Object.clone(o[key]);
+
+    return objNew;
+};
+Object.merge = function(o1, o2) {
+    var objNew = Object.clone(o1);
+    for (var p in o2) {
+        if ( o2[p].constructor==Object ) {
+            if (!o1[p]) o1[p] = {};
+            objNew[p] = Object.merge( o1[p] , o2[p]);
+        } else {
+            objNew[p] = o2[p];
+        }
+    }
+    return objNew;
+};
 document.elem = function (elemname, attributes, text) {
     if (typeof attributes === 'string') {
         text = attributes;
@@ -38,22 +66,12 @@ Element.prototype.elem = function (elemname, attr, text, returnparent) {
 };
 Element.prototype.attrib = function (attribute, value) {
     if (attribute) {
+        var _this = this;
+        var setOrRemove = function(key,value) { value!==null? _this.setAttribute(key, value) : _this.removeAttribute(key);};
         if (typeof attribute === "object") {
-            for (var key in attribute) {
-                if (attribute.hasOwnProperty(key)) {
-                    if(attribute[key]!==null){
-                        this.setAttribute(key, attribute[key]);
-                    }else{
-                        this.removeAttribute(key);
-                    }
-                }
-            }
+            Object.forEach( attribute, setOrRemove );
         } else if (typeof attribute === 'string') {
-            if(value!==null){
-                this.setAttribute(attribute, value);
-            } else {
-                this.removeAttribute(attribute);
-            }
+            setOrRemove( attribute, value );
         }
     }
     return this;
@@ -101,33 +119,33 @@ NodeList.prototype.attrib = function (attribute, value) {
     return this;
 };
 NodeList.prototype.elem = function (elemname, attr, text, returnparent) {
-    var rand = Math.random()*10000;
+    var rand = Math.random()*10000, name = "data-elemjs-attachnodelist";
     this.each(function () {
-        this.elem(elemname, attr, text, returnparent).attrib("data-elemjs-attachnodelist",rand);
+        this.elem(elemname, attr, text, returnparent).attrib(name,rand);
     });
-    return document.getElemAll("[data-elemjs-attachnodelist='"+rand+"']").attrib("data-elemjs-attachnodelist",null);
+    return document.getElemAll("["+name+"='"+rand+"']").attrib(name,null);
 };
 NodeList.prototype.del = function () {
-    var rand = Math.random()*10000;
+    var rand = Math.random()*10000, name = "data-elemjs-attachnodelist";
     this.each(function () {
-        this.delete().attrib("data-elemjs-attachnodelist",rand);
+        this.del().attrib(name,rand);
     });
-    return document.getElemAll("[data-elemjs-attachnodelist='"+rand+"']").attrib("data-elemjs-attachnodelist",null);
+    return document.getElemAll("["+name+"='"+rand+"']").attrib(name,null);
 };
 NodeList.prototype.getElem = function(selector){
-    var rand = Math.random()*10000;
+    var rand = Math.random()*10000, name = "data-elemjs-attachnodelist";
     this.each(function(){
         var temp = this.getElem(selector);
-        if(temp!==null)temp.attrib("data-elemjs-attachnodelist",rand);
+        if(temp!==null)temp.attrib(name,rand);
     });
-    return document.getElemAll("[data-elemjs-attachnodelist='"+rand+"']").attrib("data-elemjs-attachnodelist",null);
+    return document.getElemAll("["+name+"='"+rand+"']").attrib(name,null);
 };
 NodeList.prototype.getElemAll = function(selector){
-    var rand = Math.random()*10000;
+    var rand = Math.random()*10000, name = "data-elemjs-attachnodelist";
     this.each(function(){
-        this.getElemAll(selector).attrib("data-elemjs-attachnodelist",rand);
+        this.getElemAll(selector).attrib(name,rand);
     });
-    return document.getElemAll("[data-elemjs-attachnodelist='"+rand+"']").attrib("data-elemjs-attachnodelist",null);
+    return document.getElemAll("["+name+"='"+rand+"']").attrib(name,null);
 };
 NodeList.prototype.on = function (event, listener, useCapture) {
     this.each(function () {

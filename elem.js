@@ -11,9 +11,13 @@ document.getElem = function (selector) {
 document.getElemAll = function (selector) {
     return document.querySelectorAll(selector);
 };
-document.delElem = function (elemname) {
-    if (element && element.parentNode) {
-        element.parentNode.removeChild(element);
+document.delElem = function (element) {
+    if (typeof element === 'string') {
+        document.getElemAll(element).each( function() {
+            if (this.parentNode) this.parentNode.removeChild(this);
+        });
+    } else if (element && element.parentNode) {
+        element.parentNode.removeChild(element); 
     }
 };
 Element.prototype.getElem = function (selector) {

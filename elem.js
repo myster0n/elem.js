@@ -170,3 +170,24 @@ NodeList.prototype.off = function (event, listener, useCapture) {
         return this.elem(elemname, attr, text, returnparent);
     }
 });
+window.http = {
+    request: function(config, onSuccess, onError) {
+        var defaults = { method: 'GET', async: true, headers: {} };
+        var options = Object.merge(config, defaults);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    if (typeof onSuccess === 'function') onSuccess(xhr.responseText, xhr.status, xhr);
+                } else {
+                    if (typeof onError === 'function') onError(xhr.responseText, xhr.status, xhr);
+                }
+            }
+        };
+        xhr.open(options.method, options.url, options.aSync);
+        if (typeof options.headers === 'object' && options.headers !== null) 
+            Object.forEach( options.headers, function(key, value) { xhr.setRequestHeader(key, value); } );
+        xhr.send();
+        return xhr;
+    }
+};

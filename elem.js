@@ -82,4 +82,5 @@ NodeList.prototype.attrib = function (attribute, value) {
     this.each(function () {
         this.attrib(attribute, value)
     });
+    return this;
 };

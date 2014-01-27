@@ -1,11 +1,14 @@
 Elem.js
 =======
 
-JavaScript library for easy DOM manipulation by extending document, Element, NodeList, ... class.
+Elementary JavaScript library for easy DOM manipulation by extending document, Element, NodeList, ... class.
 
 Functions
 -------
 
+* Object.forEach = function (object, callback) 
+* Object.clone = function (o)
+* Object.merge = function(o1, o2) 
 * document.elem = function (elemname, attributes, text) 
   * with shortcuts for common HTML elements like div, span, table, ul, ... 
 * document.getElem = function (selector) 

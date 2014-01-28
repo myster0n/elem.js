@@ -33,9 +33,9 @@ document.elem = function (elemname, attributes, text) {
     }
     return document.createElement(elemname).attrib(attributes).setText(text);
 };
-document.getElem = function (selector) {
+/**document.getElem = function (selector) {
     return document.querySelector(selector);
-};
+};**/
 document.getElemAll = function (selector) {
     return document.querySelectorAll(selector);
 };
@@ -170,7 +170,7 @@ NodeList.prototype.off = function (event, listener, useCapture) {
         return this.elem(elemname, attr, text, returnparent);
     }
 });
-window.http = {
+Window.http = {
     request: function(config, onSuccess, onError) {
         var defaults = { method: 'GET', async: true, headers: {} };
         var options = Object.merge(config, defaults);

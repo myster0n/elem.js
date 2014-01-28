@@ -191,6 +191,7 @@ Window.http = {
         return xhr;
     },
     GET: function(config, onSuccess, onError) {
+        config = config || {};
         config.method = "GET";
         if (config.data && typeof config.data === 'object') {
             config.url += document.a({href: config.url}).search ? '&' : '?';
@@ -202,20 +203,33 @@ Window.http = {
         }
         return Window.http.request(config, onSuccess, onError);
     },
-    POST: function(config, onSuccess, onError) { 
-        config.method = "POST"; 
-        if (!config.headers) config.headers = {};
-        if (!config.headers["Content-type"]) config.headers["Content-type"] = "application/x-www-form-urlencoded";
+    POST: function(config, onSuccess, onError) {
+        config = config || {};
+        config.method = "POST";
+        config.headers = config.headers || {};
+        config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
         return Window.http.request(config, onSuccess, onError); 
     },
-    PUT: function(config, onSuccess, onError) { 
+    PUT: function(config, onSuccess, onError) {
+        config = config || {};
         config.method = "PUT"; 
-        if (!config.headers) config.headers = {};
-        if (!config.headers["Content-type"]) config.headers["Content-type"] = "application/x-www-form-urlencoded";
+        config.headers = config.headers || {};
+        config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
         return Window.http.request(config, onSuccess, onError); 
     },
-    DELETE: function(config, onSuccess, onError) { 
+    DELETE: function(config, onSuccess, onError) {
+        config = config || {};
         config.method = "DELETE"; 
         return Window.http.request(config, onSuccess, onError); 
+    },
+    serialize: function(obj, prefix) {
+        var str = [];
+        Object.forEach(obj,function(key, value){
+            var k = prefix ? prefix + "[" + key + "]" : key, v = value;
+            str.push(typeof v == "object" ?
+                Window.http.serialize(v, k) :
+                encodeURIComponent(k) + "=" + encodeURIComponent(v));
+        });
+        return str.join("&");
     }
 };

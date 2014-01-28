@@ -32,24 +32,119 @@
 
         <section id="main_content">
           <h1>
-<a name="elemjs" class="anchor" href="#elemjs"><span class="octicon octicon-link"></span></a>Elem.js</h1>
-
-<p>JavaScript library for easy DOM manipulation by extending document, Element, NodeList, ... class.</p>
+<a name="functions" class="anchor" href="#functions"><span class="octicon octicon-link"></span></a>Functions</h1>
 
 <h2>
-<a name="functions" class="anchor" href="#functions"><span class="octicon octicon-link"></span></a>Functions</h2>
+<a name="object" class="anchor" href="#object"><span class="octicon octicon-link"></span></a>Object</h2>
+
+<p>For this we've chosen to use static functions as not to burden the creation of objects.</p>
 
 <ul>
-<li>document.elem = function (elemname, attributes, text) 
+<li>
+<p>Object.forEach(object, callback)</p>
+
+<p>Loop through all your object attributes.</p>
+
+<p><em>Example :</em></p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">myObject</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">a</span> <span class="o">:</span> <span class="s2">"a"</span><span class="p">,</span> <span class="nx">b</span> <span class="o">:</span> <span class="s2">"b"</span> <span class="p">};</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span> <span class="nx">myObject</span> <span class="p">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">key</span><span class="o">+</span><span class="s2">" : "</span><span class="o">+</span><span class="nx">value</span><span class="p">);</span> <span class="p">});</span>
+</pre></div>
+</li>
+<li>
+<p>Object.clone(object)</p>
+
+<p>Deep clone an object.</p>
+
+<p><em>Example :</em></p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">o2</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">clone</span><span class="p">(</span><span class="nx">o1</span><span class="p">);</span>
+</pre></div>
+</li>
+<li>
+<p>Object.merge(object1, object2)</p>
+
+<p>Gives back the result of a deep merge of two objects</p>
+
+<p><em>Example :</em></p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">o1</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">a</span> <span class="o">:</span> <span class="s1">'a'</span><span class="p">,</span> <span class="nx">b</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">b1</span> <span class="o">:</span> <span class="s1">'b1'</span> <span class="p">}</span> <span class="p">};</span>
+<span class="kd">var</span> <span class="nx">o2</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">b</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">b2</span> <span class="o">:</span> <span class="s1">'b2'</span> <span class="p">},</span> <span class="nx">c</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">c1</span> <span class="o">:</span> <span class="s1">'c1'</span> <span class="p">}</span> <span class="p">};</span>
+<span class="kd">var</span> <span class="nx">o3</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">merge</span><span class="p">(</span><span class="nx">o1</span><span class="p">,</span> <span class="nx">o2</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o1</span><span class="p">);</span>
+<span class="c1">// prints { a : 'a', b : { b1 : 'b1' } }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o2</span><span class="p">);</span>
+<span class="c1">// prints { b : { b2 : 'b2' }, c : { c1 : 'c1' } }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">o3</span><span class="p">);</span>
+<span class="c1">// prints { a : 'a', b : {  b1 : 'b1', b2 : 'b2' }, c : { c1 : 'c1' } }</span>
+</pre></div>
+</li>
+</ul><h2>
+<a name="document" class="anchor" href="#document"><span class="octicon octicon-link"></span></a>Document</h2>
 
 <ul>
-<li>with shortcuts for common HTML elements like div, span, table, ul, ... </li>
+<li>
+<p>document.elem(elemname, attributes, text)</p>
+
+<ul>
+<li>
+<p>with shortcuts for common HTML elements like div, span, table, ul, ...</p>
+
+<p>Creates a new html element.</p>
+
+<p><em>Example :</em></p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">div1</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">elem</span><span class="p">(</span><span class="s1">'div'</span><span class="p">,{</span><span class="kr">class</span> <span class="o">:</span> <span class="s1">'example'</span><span class="p">,</span> <span class="nx">id</span> <span class="o">:</span> <span class="s1">'id1'</span><span class="p">},</span> <span class="s1">'hello world'</span><span class="p">);</span>
+<span class="c1">// or</span>
+<span class="kd">var</span> <span class="nx">div2</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">div</span><span class="p">({</span><span class="kr">class</span> <span class="o">:</span> <span class="s1">'example'</span><span class="p">,</span> <span class="nx">id</span> <span class="o">:</span> <span class="s1">'id2'</span><span class="p">},</span> <span class="s1">'hello world'</span><span class="p">);</span>
+</pre></div>
+</li>
 </ul>
 </li>
-<li>document.getElem = function (selector) </li>
-<li>document.getElemAll = function (selector) </li>
-<li>document.delElem = function (element) </li>
-<li>Element.prototype.getElem = function (selector) </li>
+<li>
+<p>document.getElem(selector)</p>
+
+<p>Returns the result of a css query.</p>
+
+<p><em>Example :</em></p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElem</span><span class="p">(</span><span class="s2">"form input#name"</span><span class="p">);</span>
+<span class="c1">// returns the input tag with id name that's inside a form</span>
+</pre></div>
+</li>
+<li>
+<p>document.getElemAll(selector)</p>
+
+<p>Returns a list of tags as a result of a css query.</p>
+
+<p><em>Example :</em></p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElemAll</span><span class="p">(</span><span class="s2">"form input[type=text]"</span><span class="p">);</span>
+<span class="c1">// returns all text input fields inside a form</span>
+</pre></div>
+</li>
+<li>
+<p>document.delElem(element)</p>
+
+<p>Deletes tags from your DOM. You either give it the element itself (or a list of elements) as a parameter or you give it a string that will be evaluated as a document.getElemAll parameter.</p>
+
+<p><em>Example :</em></p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">element</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElem</span><span class="p">(</span><span class="s2">"#id1"</span><span class="p">);</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">delElem</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
+<span class="c1">// deletes the element with the id "id1"</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">delElem</span><span class="p">(</span><span class="s2">"input"</span><span class="p">);</span>
+<span class="c1">// deletes all input tags</span>
+<span class="kd">var</span> <span class="nx">divs</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElemAll</span><span class="p">(</span><span class="s2">"div"</span><span class="p">);</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">delElem</span><span class="p">(</span><span class="nx">divs</span><span class="p">);</span>
+<span class="c1">// deletes all divs</span>
+</pre></div>
+</li>
+</ul><h2>
+<a name="element" class="anchor" href="#element"><span class="octicon octicon-link"></span></a>Element</h2>
+
+<ul>
+<li>Element.prototype.getElem = function (selector)</li>
 <li>Element.prototype.getElemAll = function (selector) </li>
 <li>Element.prototype.del = function () </li>
 <li>Element.prototype.elem = function (elemname, attr, text, returnparent) 
@@ -63,7 +158,11 @@
 <li>Element.prototype.clearElem = function () </li>
 <li>Element.prototype.on = function (event, listener, useCapture) </li>
 <li>Element.prototype.off = function (event, listener, useCapture) </li>
-<li>NodeList.prototype.each = function (callback) </li>
+</ul><h2>
+<a name="nodelist" class="anchor" href="#nodelist"><span class="octicon octicon-link"></span></a>NodeList</h2>
+
+<ul>
+<li>NodeList.prototype.each = function (callback)</li>
 <li>NodeList.prototype.attrib = function (attribute, value) </li>
 <li>NodeList.prototype.elem = function (elemname, attr, text, returnparent) 
 
@@ -76,8 +175,8 @@
 <li>NodeList.prototype.getElemAll = function(selector)</li>
 <li>NodeList.prototype.on = function (event, listener, useCapture) </li>
 <li>NodeList.prototype.off = function (event, listener, useCapture) </li>
-</ul><h2>
-<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+</ul><h1>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h1>
 
 <p>Create DOM element:</p>
 

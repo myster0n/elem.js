@@ -5,7 +5,7 @@ Object.forEach = function (object, callback) {
     }
 };
 Object.clone = function (o){
-    if(o == null || typeof(o) != 'object') return o;
+    if(o === null || typeof(o) !== 'object') return o;
 
     var objNew = o.constructor();
 
@@ -17,7 +17,7 @@ Object.clone = function (o){
 Object.merge = function(o1, o2) {
     var objNew = Object.clone(o1);
     for (var p in o2) {
-        if ( o2[p].constructor==Object ) {
+        if ( o2[p].constructor===Object ) {
             if (!o1[p]) o1[p] = {};
             objNew[p] = Object.merge( o1[p] , o2[p]);
         } else {
@@ -33,9 +33,9 @@ document.elem = function (elemname, attributes, text) {
     }
     return document.createElement(elemname).attrib(attributes).setText(text);
 };
-/**document.getElem = function (selector) {
+document.getElem = function (selector) {
     return document.querySelector(selector);
-};**/
+};
 document.getElemAll = function (selector) {
     return document.querySelectorAll(selector);
 };
@@ -173,7 +173,7 @@ NodeList.prototype.off = function (event, listener, useCapture) {
 Window.http = {
     request: function(config, onSuccess, onError) {
         var defaults = { method: 'GET', async: true, headers: {} };
-        var options = Object.merge(config, defaults);
+        var options = Object.merge(defaults, config);
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
@@ -185,9 +185,37 @@ Window.http = {
             }
         };
         xhr.open(options.method, options.url, options.aSync);
-        if (typeof options.headers === 'object' && options.headers !== null) 
+        if (options.headers !== null && typeof options.headers === 'object') 
             Object.forEach( options.headers, function(key, value) { xhr.setRequestHeader(key, value); } );
-        xhr.send();
+        xhr.send(options.data);
         return xhr;
+    },
+    GET: function(config, onSuccess, onError) {
+        config.method = "GET";
+        if (config.data && typeof config.data === 'object') {
+            config.url += document.a({href: config.url}).search ? '&' : '?';
+            Object.forEach(config.data, function(name, value) {
+                config.url += name+'='+encodeURIComponent(value)+'&';
+            });
+            config.url = config.url.substring(0, config.url.length - 1);
+            delete config.data;
+        }
+        return Window.http.request(config, onSuccess, onError);
+    },
+    POST: function(config, onSuccess, onError) { 
+        config.method = "POST"; 
+        if (!config.headers) config.headers = {};
+        if (!config.headers["Content-type"]) config.headers["Content-type"] = "application/x-www-form-urlencoded";
+        return Window.http.request(config, onSuccess, onError); 
+    },
+    PUT: function(config, onSuccess, onError) { 
+        config.method = "PUT"; 
+        if (!config.headers) config.headers = {};
+        if (!config.headers["Content-type"]) config.headers["Content-type"] = "application/x-www-form-urlencoded";
+        return Window.http.request(config, onSuccess, onError); 
+    },
+    DELETE: function(config, onSuccess, onError) { 
+        config.method = "DELETE"; 
+        return Window.http.request(config, onSuccess, onError); 
     }
 };

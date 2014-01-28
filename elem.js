@@ -195,10 +195,7 @@ Window.http = {
         config.method = "GET";
         if (config.data && typeof config.data === 'object') {
             config.url += document.a({href: config.url}).search ? '&' : '?';
-            Object.forEach(config.data, function(name, value) {
-                config.url += name+'='+encodeURIComponent(value)+'&';
-            });
-            config.url = config.url.substring(0, config.url.length - 1);
+            config.url += Window.http.serialize(config.data);
             delete config.data;
         }
         return Window.http.request(config, onSuccess, onError);

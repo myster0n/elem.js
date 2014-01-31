@@ -175,14 +175,21 @@ Window.http = {
         var defaults = { method: 'GET', async: true, headers: {} };
         var options = Object.merge(defaults, config);
         var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4) {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    if (typeof onSuccess === 'function') onSuccess(xhr.responseText, xhr.status, xhr);
-                } else {
-                    if (typeof onError === 'function') onError(xhr.responseText, xhr.status, xhr);
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                var response = this.responseText;
+                if(this.getResponseHeader("Content-Type").indexOf("json")!=-1){
+                    try{
+                        response=JSON.parse(response);
+                    }catch(e){}
                 }
+                if (typeof onSuccess === 'function') onSuccess(response, this.status, this);
+            } else {
+                if (typeof onError === 'function') onError(this.responseText, this.status, this);
             }
+        };
+        xhr.onerror = function(){
+            if (typeof onError === 'function') onError(this.responseText, this.status, this);
         };
         xhr.open(options.method, options.url, options.aSync);
         if (options.headers !== null && typeof options.headers === 'object') 

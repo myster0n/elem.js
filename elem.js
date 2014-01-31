@@ -4,6 +4,21 @@ Object.forEach = function (object, callback) {
             callback.call(object, key, object[key]);
     }
 };
+Object.every = function (object, callback) {
+    for (var key in object) {
+        if (object.hasOwnProperty(key))
+            if (!callback.call(object, key, object[key])) return false;
+    }
+    return true;
+};
+Object.some = function (object, callback) {
+    var status = false;
+    for (var key in object) {
+        if (object.hasOwnProperty(key))
+            status = callback.call(object, key, object[key]) || status;
+    }
+    return status;
+};
 Object.clone = function (o){
     if(o === null || typeof(o) !== 'object') return o;
 

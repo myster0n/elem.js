@@ -64,6 +64,9 @@ Element.prototype.elem = function (elemname, attr, text, returnparent) {
     this.appendChild(elem);
     return (returnparent !== null && returnparent) ? this : ['br', 'hr'].indexOf(elemname) === -1 ? elem : returnparent === false ? elem : this;
 };
+Element.prototype.siblings = function(){
+    return this.parentNode.children ;
+};
 Element.prototype.attrib = function (attribute, value) {
     if (attribute) {
         var _this = this;
@@ -177,23 +180,20 @@ Window.http = {
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
-                var response = this.responseText;
-                if(this.getResponseHeader("Content-Type").indexOf("json")!=-1){
-                    try{
-                        response=JSON.parse(response);
-                    }catch(e){}
-                }
-                if (typeof onSuccess === 'function') onSuccess(response, this.status, this);
+                if (typeof onSuccess === 'function') onSuccess(this.responseText, this.status, this);
             } else {
                 if (typeof onError === 'function') onError(this.responseText, this.status, this);
             }
         };
         xhr.onerror = function(){
-            if (typeof onError === 'function') onError(this.responseText, this.status, this);
+            if (typeof onError === 'function') onError(this.statusText, this.status, this);
         };
         xhr.open(options.method, options.url, options.aSync);
         if (options.headers !== null && typeof options.headers === 'object') 
             Object.forEach( options.headers, function(key, value) { xhr.setRequestHeader(key, value); } );
+        if(config.headers["Content-type"]==="application/x-www-form-urlencoded"){
+            options.data=Window.http.serialize(options.data);
+        }
         xhr.send(options.data);
         return xhr;
     },

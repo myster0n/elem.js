@@ -191,7 +191,7 @@ Window.http = {
         xhr.open(options.method, options.url, options.aSync);
         if (options.headers !== null && typeof options.headers === 'object') 
             Object.forEach( options.headers, function(key, value) { xhr.setRequestHeader(key, value); } );
-        if(config.headers["Content-type"]==="application/x-www-form-urlencoded"){
+        if(options.data && typeof options.data==="object" && config.headers["Content-type"]==="application/x-www-form-urlencoded" ){
             options.data=Window.http.serialize(options.data);
         }
         xhr.send(options.data);

@@ -7,7 +7,7 @@ Object.forEach = function (object, callback) {
 Object.every = function (object, callback) {
     for (var key in object) {
         if (object.hasOwnProperty(key))
-            if (!callback.call(object, key, object[key])) return false;
+            if (callback.call(object, key, object[key])===false) return false;
     }
     return true;
 };
@@ -60,6 +60,15 @@ document.delElem = function (element) {
         });
     } else if (element && element.parentNode) {
         element.parentNode.removeChild(element);
+    }
+};
+document.ready = function (callback){
+    if(document.addEventListener){
+        document.addEventListener("DOMContentLoaded",callback);
+    }else{
+        document.onreadystatechange = function(){
+            if(document.readyState == "interactive") callback();
+        }
     }
 };
 Element.prototype.getElem = Element.prototype.querySelector;
@@ -129,7 +138,7 @@ NodeList.prototype.each = function (callback) {
 };
 NodeList.prototype.every = function (callback) {
     for (var i = 0; i < this.length; i++) {
-        if(!callback.call(this[i])) return false;
+        if(callback.call(this[i])===false) return false;
     }
     return true;
 };

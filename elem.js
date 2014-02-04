@@ -231,8 +231,7 @@ Window.http = {
         return xhr;
     },
     GET: function(config, onSuccess, onError) {
-        if(typeof config==="string") config={url:config};
-        config = config || {};
+        config = (typeof config==="string") ? {url:config} : config || {};
         config.method = "GET";
         if (config.data && typeof config.data === 'object') {
             config.url += document.a({href: config.url}).search ? '&' : '?';
@@ -242,21 +241,21 @@ Window.http = {
         return Window.http.request(config, onSuccess, onError);
     },
     POST: function(config, onSuccess, onError) {
-        config = config || {};
+        config = (typeof config==="string") ? {url:config} : config || {};
         config.method = "POST";
         config.headers = config.headers || {};
         config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
         return Window.http.request(config, onSuccess, onError); 
     },
     PUT: function(config, onSuccess, onError) {
-        config = config || {};
+        config = (typeof config==="string") ? {url:config} : config || {};
         config.method = "PUT"; 
         config.headers = config.headers || {};
         config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
         return Window.http.request(config, onSuccess, onError); 
     },
     DELETE: function(config, onSuccess, onError) {
-        config = config || {};
+        config = (typeof config==="string") ? {url:config} : config || {};
         config.method = "DELETE"; 
         return Window.http.request(config, onSuccess, onError); 
     },
@@ -271,8 +270,7 @@ Window.http = {
         return str.join("&");
     },
     load: function(config){
-        if(typeof config==="string") config={url:config};
-        config = config || {};
+        config = (typeof config==="string") ? {url:config} : config || {};
         config.src = config.src || config.url;
         delete config.url;
         if (config.data && typeof config.data === 'object') {

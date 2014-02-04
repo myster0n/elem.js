@@ -231,6 +231,7 @@ Window.http = {
         return xhr;
     },
     GET: function(config, onSuccess, onError) {
+        if(typeof config==="string") config={url:config};
         config = config || {};
         config.method = "GET";
         if (config.data && typeof config.data === 'object') {
@@ -268,5 +269,23 @@ Window.http = {
                 encodeURIComponent(k) + "=" + encodeURIComponent(v));
         });
         return str.join("&");
+    },
+    load: function(config){
+        if(typeof config==="string") config={url:config};
+        config = config || {};
+        config.src = config.src || config.url;
+        delete config.url;
+        if (config.data && typeof config.data === 'object') {
+            config.src += document.a({href: config.src}).search ? '&' : '?';
+            config.src += Window.http.serialize(config.data);
+            delete config.data;
+        }
+        if(config.id) {
+            var toDelete = document.getElem("#"+config.id);
+            if(toDelete!==null){
+                toDelete.del();
+            }
+        }
+        return document.getElem("head").elem("script",config);
     }
 };

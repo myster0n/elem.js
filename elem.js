@@ -135,6 +135,19 @@ NodeList.prototype.each = function (callback) {
         callback.call(this[i], i);
     }
 };
+NodeList.prototype.every = function (callback) {
+    for (var i = 0; i < this.length; i++) {
+        if(!callback.call(this[i])) return false;
+    }
+    return true;
+};
+NodeList.prototype.some = function (callback) {
+    var status = false;
+    for (var i = 0; i < this.length; i++) {
+        status = callback.call(this[i]) || status;
+    }
+    return status;
+};
 NodeList.prototype.attrib = function (attribute, value) {
     this.each(function () {
         this.attrib(attribute, value)

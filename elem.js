@@ -48,12 +48,8 @@ document.elem = function (elemname, attributes, text) {
     }
     return document.createElement(elemname).attrib(attributes).setText(text);
 };
-document.getElem = function (selector) {
-    return document.querySelector(selector);
-};
-document.getElemAll = function (selector) {
-    return document.querySelectorAll(selector);
-};
+document.getElem = document.querySelector;
+document.getElemAll = document.querySelectorAll;
 document.delElem = function (element) {
     if (typeof element === 'string') {
         element = document.getElemAll(element);
@@ -66,12 +62,8 @@ document.delElem = function (element) {
         element.parentNode.removeChild(element);
     }
 };
-Element.prototype.getElem = function (selector) {
-    return this.querySelector(selector);
-};
-Element.prototype.getElemAll = function (selector) {
-    return this.querySelectorAll(selector);
-};
+Element.prototype.getElem = Element.prototype.querySelector;
+Element.prototype.getElemAll = Element.prototype.querySelectorAll;
 Element.prototype.del = function () {
     var parent = this.parentNode;
     if (parent) parent.removeChild(this);

@@ -7,7 +7,7 @@ Object.forEach = function (object, callback) {
 Object.every = function (object, callback) {
     for (var key in object) {
         if (object.hasOwnProperty(key))
-            if (!callback.call(object, key, object[key])) return false;
+            if (callback.call(object, key, object[key])===false) return false;
     }
     return true;
 };
@@ -48,12 +48,8 @@ document.elem = function (elemname, attributes, text) {
     }
     return document.createElement(elemname).attrib(attributes).setText(text);
 };
-document.getElem = function (selector) {
-    return document.querySelector(selector);
-};
-document.getElemAll = function (selector) {
-    return document.querySelectorAll(selector);
-};
+document.getElem = document.querySelector;
+document.getElemAll = document.querySelectorAll;
 document.delElem = function (element) {
     if (typeof element === 'string') {
         element = document.getElemAll(element);
@@ -66,12 +62,17 @@ document.delElem = function (element) {
         element.parentNode.removeChild(element);
     }
 };
-Element.prototype.getElem = function (selector) {
-    return this.querySelector(selector);
+document.ready = function (callback){
+    if(document.addEventListener){
+        document.addEventListener("DOMContentLoaded",callback);
+    }else{
+        document.onreadystatechange = function(){
+            if(document.readyState == "interactive") callback();
+        }
+    }
 };
-Element.prototype.getElemAll = function (selector) {
-    return this.querySelectorAll(selector);
-};
+Element.prototype.getElem = Element.prototype.querySelector;
+Element.prototype.getElemAll = Element.prototype.querySelectorAll;
 Element.prototype.del = function () {
     var parent = this.parentNode;
     if (parent) parent.removeChild(this);
@@ -135,6 +136,19 @@ NodeList.prototype.each = function (callback) {
         callback.call(this[i], i);
     }
 };
+NodeList.prototype.every = function (callback) {
+    for (var i = 0; i < this.length; i++) {
+        if(callback.call(this[i])===false) return false;
+    }
+    return true;
+};
+NodeList.prototype.some = function (callback) {
+    var status = false;
+    for (var i = 0; i < this.length; i++) {
+        status = callback.call(this[i]) || status;
+    }
+    return status;
+};
 NodeList.prototype.attrib = function (attribute, value) {
     this.each(function () {
         this.attrib(attribute, value)
@@ -182,7 +196,7 @@ NodeList.prototype.off = function (event, listener, useCapture) {
     });
     return this;
 };
-['span', 'div', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'i', 'em', 'b', 'img', 'table', 'tbody', 'thead', 'tr', 'th', 'td', 'a', 'label', 'input', 'br', 'hr'].map(function (elemname) {
+['section', 'nav', 'article', 'aside', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'footer', 'address', 'main', 'p', 'hr', 'pre', 'ol', 'ul', 'li', 'div', 'a', 'em', 'strong', 'code', 'span', 'br', 'img', 'svg', 'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th', 'form', 'label', 'input', 'button', 'select', 'option', 'textarea'].map(function (elemname) {
     Element.prototype[elemname] = function (attr, text, returnparent) {
         return this.elem(elemname, attr, text, returnparent);
     };
@@ -209,7 +223,7 @@ Window.http = {
             if (typeof onError === 'function') onError(this.statusText, this.status, this);
         };
         xhr.open(options.method, options.url, options.aSync);
-        if (options.headers !== null && typeof options.headers === 'object') 
+        if (options.headers !== null && typeof options.headers === 'object')
             Object.forEach( options.headers, function(key, value) { xhr.setRequestHeader(key, value); } );
         if(options.data && typeof options.data==="object" && config.headers["Content-type"]==="application/x-www-form-urlencoded" ){
             options.data=Window.http.serialize(options.data);
@@ -218,7 +232,7 @@ Window.http = {
         return xhr;
     },
     GET: function(config, onSuccess, onError) {
-        config = config || {};
+        config = (typeof config==="string") ? {url:config} : config || {};
         config.method = "GET";
         if (config.data && typeof config.data === 'object') {
             config.url += document.a({href: config.url}).search ? '&' : '?';
@@ -228,23 +242,23 @@ Window.http = {
         return Window.http.request(config, onSuccess, onError);
     },
     POST: function(config, onSuccess, onError) {
-        config = config || {};
+        config = (typeof config==="string") ? {url:config} : config || {};
         config.method = "POST";
         config.headers = config.headers || {};
         config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
-        return Window.http.request(config, onSuccess, onError); 
+        return Window.http.request(config, onSuccess, onError);
     },
     PUT: function(config, onSuccess, onError) {
-        config = config || {};
-        config.method = "PUT"; 
+        config = (typeof config==="string") ? {url:config} : config || {};
+        config.method = "PUT";
         config.headers = config.headers || {};
         config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
-        return Window.http.request(config, onSuccess, onError); 
+        return Window.http.request(config, onSuccess, onError);
     },
     DELETE: function(config, onSuccess, onError) {
-        config = config || {};
-        config.method = "DELETE"; 
-        return Window.http.request(config, onSuccess, onError); 
+        config = (typeof config==="string") ? {url:config} : config || {};
+        config.method = "DELETE";
+        return Window.http.request(config, onSuccess, onError);
     },
     serialize: function(obj, prefix) {
         var str = [];
@@ -255,5 +269,22 @@ Window.http = {
                 encodeURIComponent(k) + "=" + encodeURIComponent(v));
         });
         return str.join("&");
+    },
+    load: function(config){
+        config = (typeof config==="string") ? {url:config} : config || {};
+        config.src = config.src || config.url;
+        delete config.url;
+        if (config.data && typeof config.data === 'object') {
+            config.src += document.a({href: config.src}).search ? '&' : '?';
+            config.src += Window.http.serialize(config.data);
+            delete config.data;
+        }
+        if(config.id) {
+            var toDelete = document.getElem("#"+config.id);
+            if(toDelete!==null){
+                toDelete.del();
+            }
+        }
+        return document.getElem("head").elem("script",config);
     }
 };

@@ -32,7 +32,7 @@ Object.clone = function (o){
 Object.merge = function (o1, o2) {
     var objNew = Object.clone(o1);
     for (var p in o2) {
-        if ( o2[p].constructor===Object ) {
+        if ( o2[p] && o2[p].constructor===Object ) {
             if (!o1[p]) o1[p] = {};
             objNew[p] = Object.merge(o1[p], o2[p]);
         } else {
@@ -84,7 +84,7 @@ Element.prototype.elem = function (elemname, attr, text, returnparent) {
     return (returnparent !== null && returnparent) ? this : ['br', 'hr'].indexOf(elemname) === -1 ? elem : returnparent === false ? elem : this;
 };
 Element.prototype.siblings = function(){
-    return this.parentNode.children ;
+    return this.parentElement.children ;
 };
 Element.prototype.attrib = function (attribute, value) {
     if (attribute) {

@@ -46,6 +46,7 @@ document.elem = function (elemname, attributes, text) {
         text = attributes;
         attributes = null;
     }
+    if(elemname==='textElem') return document.createTextNode(text);
     return document.createElement(elemname).attrib(attributes).setText(text);
 };
 document.getElem = document.querySelector;
@@ -81,7 +82,7 @@ Element.prototype.del = function () {
 Element.prototype.elem = function (elemname, attr, text, returnparent) {
     var elem = (typeof elemname === 'string') ? document.elem(elemname, attr, text) : elemname;
     this.appendChild(elem);
-    return (returnparent !== null && returnparent) ? this : ['br', 'hr'].indexOf(elemname) === -1 ? elem : returnparent === false ? elem : this;
+    return (returnparent !== null && returnparent) ? this : ['br', 'hr', 'textElem'].indexOf(elemname) === -1 ? elem : returnparent === false ? elem : this;
 };
 Element.prototype.siblings = function(){
     return this.parentElement.children ;
@@ -196,14 +197,14 @@ NodeList.prototype.off = function (event, listener, useCapture) {
     });
     return this;
 };
-['section', 'nav', 'article', 'aside', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'footer', 'address', 'main', 'p', 'hr', 'pre', 'ol', 'ul', 'li', 'div', 'a', 'em', 'strong', 'code', 'span', 'br', 'img', 'svg', 'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th', 'form', 'label', 'input', 'button', 'select', 'option', 'textarea'].map(function (elemname) {
+['section', 'nav', 'article', 'aside', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'footer', 'address', 'main', 'p', 'hr', 'pre', 'ol', 'ul', 'li', 'div', 'a', 'em', 'strong', 'code', 'span', 'br', 'img', 'svg', 'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th', 'form', 'label', 'input', 'button', 'select', 'option', 'textarea','textElem'].map(function (elemname) {
     Element.prototype[elemname] = function (attr, text, returnparent) {
         return this.elem(elemname, attr, text, returnparent);
     };
     document[elemname] = function (attr, text) {
         return this.elem(elemname, attr, text);
     };
-    NodeList[elemname] = function (attr, text, returnparent) {
+    NodeList.prototype[elemname] = function (attr, text, returnparent) {
         return this.elem(elemname, attr, text, returnparent);
     }
 });

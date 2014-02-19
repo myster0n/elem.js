@@ -81,8 +81,9 @@ Element.prototype.del = function () {
 };
 Element.prototype.elem = function (elemname, attr, text, returnparent) {
     if(typeof elemname !== 'string'){
-        this.appendChild(elemname);
-        return this
+        var _that=this;
+        [].concat(elemname).forEach(function(element){_that.appendChild(element);});
+        return this;
     }
     var elem = document.elem(elemname, attr, text);
     this.appendChild(elem);
@@ -91,6 +92,9 @@ Element.prototype.elem = function (elemname, attr, text, returnparent) {
 Element.prototype.siblings = function(){
     return this.parentElement.children ;
 };
+Element.prototype.up = function(){
+    return this.parentElement;
+}
 Element.prototype.attrib = function (attribute, value) {
     if (attribute) {
         var _this = this;

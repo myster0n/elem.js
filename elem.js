@@ -80,7 +80,11 @@ Element.prototype.del = function () {
     return parent;
 };
 Element.prototype.elem = function (elemname, attr, text, returnparent) {
-    var elem = (typeof elemname === 'string') ? document.elem(elemname, attr, text) : elemname;
+    if(typeof elemname !== 'string'){
+        this.appendChild(elemname);
+        return this
+    }
+    var elem = document.elem(elemname, attr, text);
     this.appendChild(elem);
     return (returnparent !== null && returnparent) ? this : ['br', 'hr', 'textElem'].indexOf(elemname) === -1 ? elem : returnparent === false ? elem : this;
 };

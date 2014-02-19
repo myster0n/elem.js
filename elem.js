@@ -140,7 +140,7 @@ Element.prototype.off = function (event, listener, useCapture) {
     }
     return this;
 };
-NodeList.prototype.each = function (callback) {
+NodeList.prototype.forEach = function (callback) {
     for (var i = 0; i < this.length; i++) {
         callback.call(this[i], i);
     }

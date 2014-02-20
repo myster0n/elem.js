@@ -148,6 +148,7 @@ Element.prototype.addClass = function (className) {
         classes.push(className);
         this.className = classes.join(' ');
     }
+    return this;
 };
 Element.prototype.removeClass = function (className) {
     var classes = this.className.split(' ');
@@ -156,6 +157,7 @@ Element.prototype.removeClass = function (className) {
         classes.splice(index, 1);
         this.className = classes.join(' ');
     }
+    return this;
 };
 Element.prototype.hasClass = function (className) {
     return this.className.split(' ').indexOf(className) !== -1;

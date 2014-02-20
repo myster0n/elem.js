@@ -140,6 +140,21 @@ Element.prototype.off = function (event, listener, useCapture) {
     }
     return this;
 };
+Element.prototype.addClass = function (className){
+    var classes=this.className.split(' ');
+    if(classes.indexOf(className)===-1){
+        classes.push(className);
+        this.className=classes.join(' ');
+    }
+}
+Element.prototype.removeClass = function (className){
+    var classes=this.className.split(' ');
+    var index = classes.indexOf(className);
+    if(index!==-1){
+        classes.splice(index,1);
+        this.className=classes.join(' ');
+    }
+}
 NodeList.prototype.each = function (callback) {
     for (var i = 0; i < this.length; i++) {
         callback.call(this[i], i);

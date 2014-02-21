@@ -247,10 +247,12 @@ NodeList.prototype.toArray = function () {
 });
 Window.http = {
     request: function (config, onSuccess, onError) {
+        Window.http._callback(Window.http.before);
         var defaults = { method: 'GET', async: true, headers: {} };
         var options = Object.merge(defaults, config);
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
+            Window.http._callback(Window.http.after);
             if (this.status >= 200 && this.status < 300) {
                 if (typeof onSuccess === 'function') onSuccess(this.responseText, this.status, this);
             } else {
@@ -258,6 +260,7 @@ Window.http = {
             }
         };
         xhr.onerror = function () {
+            Window.http._callback(Window.http.after);
             if (typeof onError === 'function') onError(this.statusText, this.status, this);
         };
         xhr.open(options.method, options.url, options.aSync);
@@ -270,6 +273,15 @@ Window.http = {
         }
         xhr.send(options.data);
         return xhr;
+    },
+    _callback: function(callbackObject){
+      if(callbackObject && typeof callbackObject.callback === 'function'){
+          if(callbackObject.async){
+              setTimeout(callbackObject.callback,1);
+          }else{
+              callbackObject.callback.call();
+          }
+      }
     },
     GET: function (config, onSuccess, onError) {
         config = (typeof config === "string") ? {url: config} : config || {};
@@ -326,5 +338,11 @@ Window.http = {
             }
         }
         return document.getElem("head").elem("script", config);
+    },
+    setBefore: function(callback, async){
+        Window.http.before = {callback:callback,async:async};
+    },
+    setAfter: function(callback, async){
+        Window.http.after = {callback:callback,async:async};
     }
 };

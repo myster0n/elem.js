@@ -260,7 +260,7 @@ Window.http = {
         xhr.onerror = function () {
             if (typeof onError === 'function') onError(this.statusText, this.status, this);
         };
-        xhr.open(options.method, options.url, options.aSync);
+        xhr.open(options.method, options.url, options.async);
         if (options.headers !== null && typeof options.headers === 'object')
             Object.forEach(options.headers, function (key, value) {
                 xhr.setRequestHeader(key, value);

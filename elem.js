@@ -64,8 +64,10 @@ document.delElem = function (element) {
     }
 };
 document.ready = function (callback) {
-    if (document.addEventListener) {
-        document.addEventListener("DOMContentLoaded", callback);
+    if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {
+        setTimeout(callback,1);
+    }else if (document.addEventListener) {
+            document.addEventListener("DOMContentLoaded", callback);
     } else {
         document.onreadystatechange = function () {
             if (document.readyState == "interactive") callback();
@@ -187,21 +189,21 @@ NodeList.prototype.attrib = function (attribute, value) {
     return this;
 };
 NodeList.prototype.elem = function (elemname, attr, text, returnparent) {
-    var rand = Math.random() * 10000, name = "data-elemjs-attachnodelist";
+    var rand = Math.random() * 10000, name = "data-elemjs-NL-elem";
     this.each(function () {
         this.elem(elemname, attr, text, returnparent).attrib(name, rand);
     });
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.del = function () {
-    var rand = Math.random() * 10000, name = "data-elemjs-attachnodelist";
+    var rand = Math.random() * 10000, name = "data-elemjs-NL-del";
     this.each(function () {
         this.del().attrib(name, rand);
     });
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.getElem = function (selector) {
-    var rand = Math.random() * 10000, name = "data-elemjs-attachnodelist";
+    var rand = Math.random() * 10000, name = "data-elemjs-NL-getElem";
     this.each(function () {
         var temp = this.getElem(selector);
         if (temp !== null)temp.attrib(name, rand);
@@ -209,7 +211,7 @@ NodeList.prototype.getElem = function (selector) {
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.getElemAll = function (selector) {
-    var rand = Math.random() * 10000, name = "data-elemjs-attachnodelist";
+    var rand = Math.random() * 10000, name = "data-elemjs-NL-getElemAll";
     this.each(function () {
         this.getElemAll(selector).attrib(name, rand);
     });

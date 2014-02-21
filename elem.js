@@ -55,8 +55,8 @@ document.delElem = function (element) {
     if (typeof element === 'string') {
         element = document.getElemAll(element);
     }
-    if (element.each) {
-        element.each(function () {
+    if (element.forEach) {
+        element.forEach(function () {
             if (this.parentNode) this.parentNode.removeChild(this);
         });
     } else if (element && element.parentNode) {

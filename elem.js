@@ -65,9 +65,9 @@ document.delElem = function (element) {
 };
 document.ready = function (callback) {
     if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {
-        setTimeout(callback,1);
-    }else if (document.addEventListener) {
-            document.addEventListener("DOMContentLoaded", callback);
+        setTimeout(callback, 1);
+    } else if (document.addEventListener) {
+        document.addEventListener("DOMContentLoaded", callback);
     } else {
         document.onreadystatechange = function () {
             if (document.readyState == "interactive") callback();
@@ -246,48 +246,51 @@ NodeList.prototype.toArray = function () {
     }
 });
 Window.http = {
-    request: function (config, onSuccess, onError) {
-        Window.http._callback(Window.http._before);
-        try{
-            var defaults = { method: 'GET', async: true, headers: {} };
-            var options = Object.merge(defaults, config);
-            var xhr = new XMLHttpRequest();
-            xhr.onload = function () {
-                Window.http._callback(Window.http._after);
-                if (this.status >= 200 && this.status < 300) {
-                    if (typeof onSuccess === 'function') onSuccess(this.responseText, this.status, this);
-                } else {
-                    if (typeof onError === 'function') onError(this.responseText, this.status, this);
-                }
-            };
-            xhr.onerror = function () {
-                Window.http._callback(Window.http._after);
-                if (typeof onError === 'function') onError(this.statusText, this.status, this);
-            };
-            xhr.open(options.method, options.url, options.async);
-            if (options.headers !== null && typeof options.headers === 'object')
-                Object.forEach(options.headers, function (key, value) {
-                    xhr.setRequestHeader(key, value);
-                });
-            if (options.data && typeof options.data === "object" && config.headers["Content-type"] === "application/x-www-form-urlencoded") {
-                options.data = Window.http.serialize(options.data);
+    defaults: { method: 'GET', async: true, headers: {} },
+    request: function (config) {
+        var options = Object.merge(Window.http.defaults, config);
+        Window.http._callback(options.before);
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                Window.http._callback(options.success,this.responseText, this.status,this.statusText, this);
+            } else {
+                Window.http._callback(options.error,this.responseText, this.status,this.statusText, this);
             }
-            xhr.send(options.data);
-            return xhr;
-        }catch(e) {
-            Window.http._callback(Window.http._after);
+        };
+        xhr.onerror = function () {
+            Window.http._callback(options.error,this.responseText, this.status,this.statusText, this);
+        };
+        xhr.onloadend = function () {
+            Window.http._callback(options.loadEnd);
+        };
+        xhr.onprogress = function (event) {
+            if (event.lengthComputable) {
+                Window.http._callback(options.progress, event.loaded, event.total);
+            } else {
+                Window.http._callback(options.progress, event.loaded, null);
+            }
+        };
+        xhr.open(options.method, options.url, options.async);
+        if (options.headers !== null && typeof options.headers === 'object')
+            Object.forEach(options.headers, function (key, value) {
+                xhr.setRequestHeader(key, value);
+            });
+        if (options.data && typeof options.data === "object" && config.headers["Content-type"] === "application/x-www-form-urlencoded") {
+            options.data = Window.http.serialize(options.data);
+        }
+        xhr.send(options.data);
+        return xhr;
+    },
+    _callback: function (callbackObject) {
+        if (callbackObject && typeof callbackObject === 'function') {
+            var args = [].slice.call(arguments).slice(1);
+            setTimeout(function () {
+                callbackObject.apply(document, args)
+            }, 0);
         }
     },
-    _callback: function(callbackObject){
-      if(callbackObject && typeof callbackObject.callback === 'function'){
-          if(callbackObject.async){
-              setTimeout(callbackObject.callback,1);
-          }else{
-              callbackObject.callback.call();
-          }
-      }
-    },
-    GET: function (config, onSuccess, onError) {
+    GET: function (config) {
         config = (typeof config === "string") ? {url: config} : config || {};
         config.method = "GET";
         if (config.data && typeof config.data === 'object') {
@@ -295,26 +298,26 @@ Window.http = {
             config.url += Window.http.serialize(config.data);
             delete config.data;
         }
-        return Window.http.request(config, onSuccess, onError);
+        return Window.http.request(config);
     },
-    POST: function (config, onSuccess, onError) {
+    POST: function (config) {
         config = (typeof config === "string") ? {url: config} : config || {};
         config.method = "POST";
         config.headers = config.headers || {};
         config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
-        return Window.http.request(config, onSuccess, onError);
+        return Window.http.request(config);
     },
-    PUT: function (config, onSuccess, onError) {
+    PUT: function (config) {
         config = (typeof config === "string") ? {url: config} : config || {};
         config.method = "PUT";
         config.headers = config.headers || {};
         config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
-        return Window.http.request(config, onSuccess, onError);
+        return Window.http.request(config);
     },
-    DELETE: function (config, onSuccess, onError) {
+    DELETE: function (config) {
         config = (typeof config === "string") ? {url: config} : config || {};
         config.method = "DELETE";
-        return Window.http.request(config, onSuccess, onError);
+        return Window.http.request(config);
     },
     serialize: function (obj, prefix) {
         var str = [];
@@ -342,11 +345,5 @@ Window.http = {
             }
         }
         return document.getElem("head").elem("script", config);
-    },
-    setBefore: function(callback, async){
-        Window.http._before = {callback:callback,async:async};
-    },
-    setAfter: function(callback, async){
-        Window.http._after = {callback:callback,async:async};
     }
 };

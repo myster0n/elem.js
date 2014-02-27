@@ -77,7 +77,7 @@ document.ready = function (callback) {
     }
 };
 Element.prototype.getElem = function(selector){
-    return Element.prototype.querySelector(selector) || Object.create(HTMLUnknownElement.prototype);
+    return this.querySelector(selector) || Object.create(HTMLUnknownElement.prototype);
 };
 Element.prototype.getElemAll = Element.prototype.querySelectorAll;
 Element.prototype.del = function () {

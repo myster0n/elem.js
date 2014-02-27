@@ -183,28 +183,28 @@ NodeList.prototype.some = function (callback) {
     return status;
 };
 NodeList.prototype.attrib = function (attribute, value) {
-    this.each(function () {
+    this.forEach(function () {
         this.attrib(attribute, value)
     });
     return this;
 };
 NodeList.prototype.elem = function (elemname, attr, text, returnparent) {
     var rand = Math.random() * 10000, name = "data-elemjs-NL-elem";
-    this.each(function () {
+    this.forEach(function () {
         this.elem(elemname, attr, text, returnparent).attrib(name, rand);
     });
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.del = function () {
     var rand = Math.random() * 10000, name = "data-elemjs-NL-del";
-    this.each(function () {
+    this.forEach(function () {
         this.del().attrib(name, rand);
     });
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.getElem = function (selector) {
     var rand = Math.random() * 10000, name = "data-elemjs-NL-getElem";
-    this.each(function () {
+    this.forEach(function () {
         var temp = this.getElem(selector);
         if (temp !== null)temp.attrib(name, rand);
     });
@@ -212,19 +212,19 @@ NodeList.prototype.getElem = function (selector) {
 };
 NodeList.prototype.getElemAll = function (selector) {
     var rand = Math.random() * 10000, name = "data-elemjs-NL-getElemAll";
-    this.each(function () {
+    this.forEach(function () {
         this.getElemAll(selector).attrib(name, rand);
     });
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.on = function (event, listener, useCapture) {
-    this.each(function () {
+    this.forEach(function () {
         this.on(event, listener, useCapture);
     });
     return this;
 };
 NodeList.prototype.off = function (event, listener, useCapture) {
-    this.each(function () {
+    this.forEach(function () {
         this.off(event, listener, useCapture);
     });
     return this;

@@ -49,7 +49,9 @@ document.elem = function (elemname, attributes, text) {
     if (elemname === 'textElem') return document.createTextNode(text);
     return document.createElement(elemname).attrib(attributes).setText(text);
 };
-document.getElem = document.querySelector;
+document.getElem = function(selector){
+    return document.querySelector(selector) || Object.create(HTMLUnknownElement.prototype);
+};
 document.getElemAll = document.querySelectorAll;
 document.delElem = function (element) {
     if (typeof element === 'string') {
@@ -74,7 +76,9 @@ document.ready = function (callback) {
         }
     }
 };
-Element.prototype.getElem = Element.prototype.querySelector;
+Element.prototype.getElem = function(selector){
+    return Element.prototype.querySelector(selector) || Object.create(HTMLUnknownElement.prototype);
+};
 Element.prototype.getElemAll = Element.prototype.querySelectorAll;
 Element.prototype.del = function () {
     var parent = this.parentNode;

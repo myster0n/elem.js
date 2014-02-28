@@ -56,8 +56,8 @@ document.delElem = function (element) {
         element = document.getElemAll(element);
     }
     if (element.forEach) {
-        element.forEach(function () {
-            if (this.parentNode) this.parentNode.removeChild(this);
+        element.forEach(function (node) {
+            if (node.parentNode) node.parentNode.removeChild(node);
         });
     } else if (element && element.parentNode) {
         element.parentNode.removeChild(element);
@@ -145,9 +145,9 @@ Element.prototype.off = function (event, listener, useCapture) {
     return this;
 };
 Element.prototype.addClass = function (className) {
-    if(this.classList){
+    if (this.classList) {
         this.classList.add(className);
-    }else{
+    } else {
         var classes = this.className.split(' ');
         if (classes.indexOf(className) === -1) {
             classes.push(className);
@@ -157,9 +157,9 @@ Element.prototype.addClass = function (className) {
     return this;
 };
 Element.prototype.removeClass = function (className) {
-    if(this.classList){
+    if (this.classList) {
         this.classList.remove(className);
-    }else{
+    } else {
         var classes = this.className.split(' ');
         var index = classes.indexOf(className);
         if (index !== -1) {
@@ -169,77 +169,114 @@ Element.prototype.removeClass = function (className) {
     }
     return this;
 };
+Element.prototype.toggleClass = function (className) {
+    if (this.classList) {
+        this.classList.toggle(className);
+    } else if (this.className.split(' ').indexOf(className) !== -1) {
+        this.removeClass(className);
+    } else {
+        this.addClass(className);
+    }
+    return this;
+};
 Element.prototype.hasClass = function (className) {
-    if(this.classList){
+    if (this.classList) {
         return this.classList.contains(className);
-    }else{
+    } else {
         return this.className.split(' ').indexOf(className) !== -1;
     }
 };
 NodeList.prototype.forEach = function (callback) {
     for (var i = 0; i < this.length; i++) {
-        callback.call(this[i], i);
+        callback(this[i], i);
     }
 };
 NodeList.prototype.every = function (callback) {
     for (var i = 0; i < this.length; i++) {
-        if (callback.call(this[i]) === false) return false;
+        if (callback(this[i], i) === false) return false;
     }
     return true;
 };
 NodeList.prototype.some = function (callback) {
     var status = false;
     for (var i = 0; i < this.length; i++) {
-        status = callback.call(this[i]) || status;
+        status = callback(this[i], i) || status;
     }
     return status;
 };
 NodeList.prototype.attrib = function (attribute, value) {
-    this.forEach(function () {
-        this.attrib(attribute, value)
+    this.forEach(function (node) {
+        node.attrib(attribute, value)
     });
     return this;
 };
 NodeList.prototype.elem = function (elemname, attr, text, returnparent) {
     var rand = Math.random() * 10000, name = "data-elemjs-NL-elem";
-    this.forEach(function () {
-        this.elem(elemname, attr, text, returnparent).attrib(name, rand);
+    this.forEach(function (node) {
+        node.elem(elemname, attr, text, returnparent).attrib(name, rand);
     });
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.del = function () {
     var rand = Math.random() * 10000, name = "data-elemjs-NL-del";
-    this.forEach(function () {
-        this.del().attrib(name, rand);
+    this.forEach(function (node) {
+        node.del().attrib(name, rand);
     });
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.getElem = function (selector) {
     var rand = Math.random() * 10000, name = "data-elemjs-NL-getElem";
-    this.forEach(function () {
-        var temp = this.getElem(selector);
+    this.forEach(function (node) {
+        var temp = node.getElem(selector);
         if (temp !== null)temp.attrib(name, rand);
     });
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.getElemAll = function (selector) {
     var rand = Math.random() * 10000, name = "data-elemjs-NL-getElemAll";
-    this.forEach(function () {
-        this.getElemAll(selector).attrib(name, rand);
+    this.forEach(function (node) {
+        node.getElemAll(selector).attrib(name, rand);
     });
     return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.on = function (event, listener, useCapture) {
-    this.forEach(function () {
-        this.on(event, listener, useCapture);
+    this.forEach(function (node) {
+        node.on(event, listener, useCapture);
     });
     return this;
 };
 NodeList.prototype.off = function (event, listener, useCapture) {
-    this.forEach(function () {
-        this.off(event, listener, useCapture);
+    this.forEach(function (node) {
+        node.off(event, listener, useCapture);
     });
     return this;
+};
+NodeList.prototype.addClass = function (className) {
+    this.forEach(function (node) {
+        node.addClass(className);
+    });
+    return this;
+};
+NodeList.prototype.removeClass = function (className) {
+    this.forEach(function (node) {
+        node.removeClass(className);
+    });
+    return this;
+};
+NodeList.prototype.toggleClass = function (className) {
+    this.forEach(function (node) {
+        node.toggleClass(className);
+    });
+    return this;
+};
+NodeList.prototype.hasClass = function (className) {
+    var rand = Math.random() * 10000, name = "data-elemjs-NL-hasClass";
+    this.forEach(function (node) {
+        if (node.hasClass(className)) {
+            node.attrib(name, rand);
+        }
+    });
+    return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
 };
 NodeList.prototype.toArray = function () {
     var arr = [];
@@ -265,13 +302,13 @@ Window.http = {
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
-                Window.http._callback(options.success,this.responseText, this.status,this.statusText, this);
+                Window.http._callback(options.success, this.responseText, this.status, this.statusText, this);
             } else {
-                Window.http._callback(options.error,this.responseText, this.status,this.statusText, this);
+                Window.http._callback(options.error, this.responseText, this.status, this.statusText, this);
             }
         };
         xhr.onerror = function () {
-            Window.http._callback(options.error,this.responseText, this.status,this.statusText, this);
+            Window.http._callback(options.error, this.responseText, this.status, this.statusText, this);
         };
         xhr.onloadend = function () {
             Window.http._callback(options.loadEnd);

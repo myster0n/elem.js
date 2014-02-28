@@ -149,24 +149,36 @@ Element.prototype.off = function (event, listener, useCapture) {
     return this;
 };
 Element.prototype.addClass = function (className) {
-    var classes = this.className.split(' ');
-    if (classes.indexOf(className) === -1) {
-        classes.push(className);
-        this.className = classes.join(' ');
+    if(this.classList){
+        this.classList.add(className);
+    }else{
+        var classes = this.className.split(' ');
+        if (classes.indexOf(className) === -1) {
+            classes.push(className);
+            this.className = classes.join(' ');
+        }
     }
     return this;
 };
 Element.prototype.removeClass = function (className) {
-    var classes = this.className.split(' ');
-    var index = classes.indexOf(className);
-    if (index !== -1) {
-        classes.splice(index, 1);
-        this.className = classes.join(' ');
+    if(this.classList){
+        this.classList.remove(className);
+    }else{
+        var classes = this.className.split(' ');
+        var index = classes.indexOf(className);
+        if (index !== -1) {
+            classes.splice(index, 1);
+            this.className = classes.join(' ');
+        }
     }
     return this;
 };
 Element.prototype.hasClass = function (className) {
-    return this.className.split(' ').indexOf(className) !== -1;
+    if(this.classList){
+        return this.classList.contains(className);
+    }else{
+        return this.className.split(' ').indexOf(className) !== -1;
+    }
 };
 NodeList.prototype.forEach = function (callback) {
     for (var i = 0; i < this.length; i++) {

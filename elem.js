@@ -102,7 +102,7 @@ Element.prototype.siblings = function () {
 };
 Element.prototype.up = function () {
     return this.parentElement;
-}
+};
 Element.prototype.attrib = function (attribute, value) {
     if (attribute) {
         var _this = this;
@@ -326,10 +326,10 @@ Window.http = {
     serialize: function (obj, prefix) {
         var str = [];
         Object.forEach(obj, function (key, value) {
-            var k = prefix ? prefix + "[" + key + "]" : key, v = value;
-            str.push(typeof v == "object" ?
-                Window.http.serialize(v, k) :
-                encodeURIComponent(k) + "=" + encodeURIComponent(v));
+            var k = prefix ? prefix + "[" + key + "]" : key;
+            str.push(typeof value == "object" ?
+                Window.http.serialize(value, k) :
+                encodeURIComponent(k) + "=" + encodeURIComponent(value));
         });
         return str.join("&");
     },

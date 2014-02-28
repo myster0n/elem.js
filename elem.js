@@ -50,7 +50,7 @@ document.elem = function (elemname, attributes, text) {
     return document.createElement(elemname).attrib(attributes).setText(text);
 };
 document.getElem = function(selector){
-    return document.querySelector(selector) || Object.create(HTMLUnknownElement.prototype);
+    return document.querySelector(selector) || document.elem("unknown");
 };
 document.getElemAll = document.querySelectorAll;
 document.delElem = function (element) {
@@ -77,7 +77,7 @@ document.ready = function (callback) {
     }
 };
 Element.prototype.getElem = function(selector){
-    return this.querySelector(selector) || Object.create(HTMLUnknownElement.prototype);
+    return this.querySelector(selector) || document.elem("unknown");
 };
 Element.prototype.getElemAll = Element.prototype.querySelectorAll;
 Element.prototype.del = function () {

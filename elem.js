@@ -49,9 +49,7 @@ document.elem = function (elemname, attributes, text) {
     if (elemname === 'textElem') return document.createTextNode(text);
     return document.createElement(elemname).attrib(attributes).setText(text);
 };
-document.getElem = function(selector){
-    return document.querySelector(selector) || document.elem("unknown");
-};
+document.getElem = document.querySelector;
 document.getElemAll = document.querySelectorAll;
 document.delElem = function (element) {
     if (typeof element === 'string') {
@@ -76,9 +74,7 @@ document.ready = function (callback) {
         }
     }
 };
-Element.prototype.getElem = function(selector){
-    return this.querySelector(selector) || document.elem("unknown");
-};
+Element.prototype.getElem = Element.prototype.querySelector;
 Element.prototype.getElemAll = Element.prototype.querySelectorAll;
 Element.prototype.del = function () {
     var parent = this.parentNode;

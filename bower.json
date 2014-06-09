@@ -1,0 +1,22 @@
+{
+  "name": "elem.js",
+  "main": "elem.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/myster0n/elem.js",
+  "authors": [
+    "myster0n",
+    "LennartC"
+  ],
+  "description": "Small Javascript library for easy DOM manipulation by extending document, Element, NodeList, ... class",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

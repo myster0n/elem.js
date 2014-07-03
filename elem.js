@@ -370,11 +370,16 @@ Window.http = {
     },
     serialize: function (obj, prefix) {
         var str = [];
+        var appendValue = function(key, value) {
+            if (Array.isArray(value)) {
+                value.forEach(function(arrValue) { appendValue(key, arrValue) });
+            } else {
+                str.push(typeof value == "object" ? Window.http.serialize(value, key) : encodeURIComponent(key) + "=" + encodeURIComponent(value));
+            }
+        }
         Object.forEach(obj, function (key, value) {
             var k = prefix ? prefix + "[" + key + "]" : key;
-            str.push(typeof value == "object" ?
-                Window.http.serialize(value, k) :
-                encodeURIComponent(k) + "=" + encodeURIComponent(value));
+            appendValue(k, value);
         });
         return str.join("&");
     },

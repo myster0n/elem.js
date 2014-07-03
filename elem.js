@@ -379,7 +379,7 @@ Window.http = {
         }
         Object.forEach(obj, function (key, value) {
             var k = prefix ? prefix + "[" + key + "]" : key;
-            appendValue(k, value);
+            if (typeof value !== 'undefined') appendValue(k, value);
         });
         return str.join("&");
     },

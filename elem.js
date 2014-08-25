@@ -1,3 +1,21 @@
+if (typeof Object.procreate !== 'function') {
+    Object.procreate = function (o,methods) {
+        o=o||Object;
+        var F=methods.constructor|| function(){};
+        F.prototype=Object.create(o.prototype);
+        F.prototype.constructor=methods.constructor|| function(){};
+        F.prototype.super=o;
+        F.prototype.callSuper=function(method){
+            if(typeof this.super.prototype[method]!=='function')throw new ReferenceError("'"+method+"' is not a function of parent object");
+            var args = Array.prototype.slice.call(arguments,1);
+            return this.super.prototype[method].apply(this,args);
+        }
+        for(var m in methods){
+            if(m!=='constructor')F.prototype[m]=methods[m];
+        }
+        return F;
+    };
+}
 Object.forEach = function (object, callback) {
     for (var key in object) {
         if (object.hasOwnProperty(key))

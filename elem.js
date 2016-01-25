@@ -42,7 +42,7 @@ Object.merge = function (o1, o2) {
     return objNew;
 };
 document.elem = function (elemname, attributes, text) {
-    if (typeof attributes === 'string') {
+    if (typeof attributes === 'string' || typeof attributes === 'number') {
         text = attributes;
         attributes = null;
     }

@@ -64,13 +64,13 @@ document.delElem = function (element) {
     }
 };
 document.ready = function (callback) {
-    if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {
+    if (document.readyState == 'complete' || document.readyState == 'loaded' || document.readyState == 'interactive') {
         setTimeout(callback, 1);
     } else if (document.addEventListener) {
-        document.addEventListener("DOMContentLoaded", callback);
+        document.addEventListener('DOMContentLoaded', callback);
     } else {
         document.onreadystatechange = function () {
-            if (document.readyState == "interactive") callback();
+            if (document.readyState === 'interactive') callback();
         }
     }
 };
@@ -105,7 +105,7 @@ Element.prototype.attrib = function (attribute, value) {
         var setOrRemove = function (key, value) {
             value !== null ? _this.setAttribute(key, value) : _this.removeAttribute(key);
         };
-        if (typeof attribute === "object") {
+        if (typeof attribute === 'object') {
             Object.forEach(attribute, setOrRemove);
         } else if (typeof attribute === 'string') {
             setOrRemove(attribute, value);
@@ -211,33 +211,33 @@ NodeList.prototype.attrib = function (attribute, value) {
     return this;
 };
 NodeList.prototype.elem = function (elemname, attr, text, returnparent) {
-    var rand = Math.random() * 10000, name = "data-elemjs-NL-elem";
+    var rand = Math.random() * 10000, name = 'data-elemjs-NL-elem';
     this.forEach(function (node) {
         node.elem(elemname, attr, text, returnparent).attrib(name, rand);
     });
-    return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
+    return document.getElemAll('[' + name + '=\'' + rand + '\']').attrib(name, null);
 };
 NodeList.prototype.del = function () {
-    var rand = Math.random() * 10000, name = "data-elemjs-NL-del";
+    var rand = Math.random() * 10000, name = 'data-elemjs-NL-del';
     this.forEach(function (node) {
         node.del().attrib(name, rand);
     });
-    return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
+    return document.getElemAll('[' + name + '=\'' + rand + '\']').attrib(name, null);
 };
 NodeList.prototype.getElem = function (selector) {
-    var rand = Math.random() * 10000, name = "data-elemjs-NL-getElem";
+    var rand = Math.random() * 10000, name = 'data-elemjs-NL-getElem';
     this.forEach(function (node) {
         var temp = node.getElem(selector);
         if (temp !== null)temp.attrib(name, rand);
     });
-    return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
+    return document.getElemAll('[' + name + '=\'' + rand + '\']').attrib(name, null);
 };
 NodeList.prototype.getElemAll = function (selector) {
-    var rand = Math.random() * 10000, name = "data-elemjs-NL-getElemAll";
+    var rand = Math.random() * 10000, name = 'data-elemjs-NL-getElemAll';
     this.forEach(function (node) {
         node.getElemAll(selector).attrib(name, rand);
     });
-    return document.getElemAll("[" + name + "='" + rand + "']").attrib(name, null);
+    return document.getElemAll('[' + name + '=\'' + rand + '\']').attrib(name, null);
 };
 NodeList.prototype.on = function (event, listener, useCapture) {
     this.forEach(function (node) {
@@ -270,7 +270,7 @@ NodeList.prototype.toggleClass = function (className) {
     return this;
 };
 NodeList.prototype.hasClass = function (className) {
-    var rand = Math.random() * 10000, name = "data-elemjs-NL-hasClass";
+    var rand = Math.random() * 10000, name = 'data-elemjs-NL-hasClass';
     this.forEach(function (node) {
         if (node.hasClass(className)) {
             node.attrib(name, rand);
@@ -325,7 +325,7 @@ Window.http = {
             Object.forEach(options.headers, function (key, value) {
                 xhr.setRequestHeader(key, value);
             });
-        if (options.data && typeof options.data === "object" && config.headers["Content-type"] === "application/x-www-form-urlencoded") {
+        if (options.data && typeof options.data === 'object' && config.headers['Content-type'] === 'application/x-www-form-urlencoded') {
             options.data = Window.http.serialize(options.data);
         }
         xhr.send(options.data);
@@ -340,8 +340,8 @@ Window.http = {
         }
     },
     GET: function (config) {
-        config = (typeof config === "string") ? {url: config} : config || {};
-        config.method = "GET";
+        config = (typeof config === 'string') ? {url: config} : config || {};
+        config.method = 'GET';
         if (config.data && typeof config.data === 'object') {
             config.url += document.a({href: config.url}).search ? '&' : '?';
             config.url += Window.http.serialize(config.data);
@@ -350,22 +350,22 @@ Window.http = {
         return Window.http.request(config);
     },
     POST: function (config) {
-        config = (typeof config === "string") ? {url: config} : config || {};
-        config.method = "POST";
+        config = (typeof config === 'string') ? {url: config} : config || {};
+        config.method = 'POST';
         config.headers = config.headers || {};
-        config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
+        config.headers['Content-type'] = config.headers['Content-type'] || 'application/x-www-form-urlencoded';
         return Window.http.request(config);
     },
     PUT: function (config) {
-        config = (typeof config === "string") ? {url: config} : config || {};
-        config.method = "PUT";
+        config = (typeof config === 'string') ? {url: config} : config || {};
+        config.method = 'PUT';
         config.headers = config.headers || {};
-        config.headers["Content-type"] = config.headers["Content-type"] || "application/x-www-form-urlencoded";
+        config.headers['Content-type'] = config.headers['Content-type'] || 'application/x-www-form-urlencoded';
         return Window.http.request(config);
     },
     DELETE: function (config) {
-        config = (typeof config === "string") ? {url: config} : config || {};
-        config.method = "DELETE";
+        config = (typeof config === 'string') ? {url: config} : config || {};
+        config.method = 'DELETE';
         return Window.http.request(config);
     },
     serialize: function (obj, prefix) {
@@ -374,17 +374,17 @@ Window.http = {
             if (Array.isArray(value)) {
                 value.forEach(function(arrValue) { appendValue(key, arrValue) });
             } else {
-                str.push(typeof value == "object" ? Window.http.serialize(value, key) : encodeURIComponent(key) + "=" + encodeURIComponent(value));
+                str.push(typeof value === 'object' ? Window.http.serialize(value, key) : encodeURIComponent(key) + '=' + encodeURIComponent(value));
             }
         }
         Object.forEach(obj, function (key, value) {
-            var k = prefix ? prefix + "[" + key + "]" : key;
+            var k = prefix ? prefix + '[' + key + ']' : key;
             if (typeof value !== 'undefined') appendValue(k, value);
         });
-        return str.join("&");
+        return str.join('&');
     },
     load: function (config) {
-        config = (typeof config === "string") ? {url: config} : config || {};
+        config = (typeof config === 'string') ? {url: config} : config || {};
         config.src = config.src || config.url;
         delete config.url;
         if (config.data && typeof config.data === 'object') {
@@ -393,11 +393,11 @@ Window.http = {
             delete config.data;
         }
         if (config.id) {
-            var toDelete = document.getElem("#" + config.id);
+            var toDelete = document.getElem('#' + config.id);
             if (toDelete !== null) {
                 toDelete.del();
             }
         }
-        return document.getElem("head").elem("script", config);
+        return document.getElem('head').elem('script', config);
     }
 };
